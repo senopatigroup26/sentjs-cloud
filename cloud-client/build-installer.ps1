@@ -14,7 +14,7 @@ Write-Host "============================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Clean previous builds
-Write-Host "[1/6] Cleaning previous builds..." -ForegroundColor Yellow
+Write-Host "[1/7] Cleaning previous builds..." -ForegroundColor Yellow
 if (Test-Path ".\Releases") {
     Remove-Item ".\Releases" -Recurse -Force
     Write-Host "      Removed old Releases folder" -ForegroundColor Gray
@@ -26,7 +26,7 @@ if (Test-Path ".\publish") {
 
 # Build the application
 Write-Host ""
-Write-Host "[2/6] Building Release version..." -ForegroundColor Yellow
+Write-Host "[2/7] Building Release version..." -ForegroundColor Yellow
 dotnet publish SentjaTray\SentjaTray.csproj `
     -c Release `
     -r win-x64 `
@@ -46,13 +46,13 @@ Write-Host "      Build completed successfully" -ForegroundColor Green
 
 # Create Releases directory
 Write-Host ""
-Write-Host "[3/6] Creating Releases directory..." -ForegroundColor Yellow
+Write-Host "[3/7] Creating Releases directory..." -ForegroundColor Yellow
 New-Item -ItemType Directory -Path ".\Releases" -Force | Out-Null
 Write-Host "      Directory created" -ForegroundColor Green
 
 # Check for Squirrel
 Write-Host ""
-Write-Host "[4/6] Checking for Squirrel..." -ForegroundColor Yellow
+Write-Host "[4/7] Checking for Squirrel..." -ForegroundColor Yellow
 
 $squirrelExe = $null
 
@@ -97,7 +97,7 @@ if (-not $squirrelExe) {
 
 # Pack with Squirrel
 Write-Host ""
-Write-Host "[5/6] Creating installer with Clowd.Squirrel..." -ForegroundColor Yellow
+Write-Host "[5/7] Creating installer with Clowd.Squirrel..." -ForegroundColor Yellow
 
 $iconPath = (Resolve-Path ".\SentjaTray\Resources\logo.ico").Path
 if (-not (Test-Path $iconPath)) {
@@ -142,7 +142,7 @@ Write-Host "      Installer created successfully" -ForegroundColor Green
 
 # Verify outputs
 Write-Host ""
-Write-Host "[6/6] Verifying outputs..." -ForegroundColor Yellow
+Write-Host "[6/7] Verifying outputs..." -ForegroundColor Yellow
 
 $allFiles = Get-ChildItem ".\Releases" -File
 foreach ($file in $allFiles) {
@@ -155,18 +155,38 @@ Write-Host "============================================" -ForegroundColor Green
 Write-Host "Build Completed Successfully!" -ForegroundColor Green
 Write-Host "============================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "Installer files:" -ForegroundColor Cyan
 
+# Create distribution ZIPs
+Write-Host "[7/7] Creating distribution packages..." -ForegroundColor Yellow
+
+$distDir = "D:\"
+$installerZip = "$distDir\SentjaCloud-v$Version-Installer.zip"
+$portableZip = "$distDir\SentjaCloud-v$Version-Portable.zip"
+
+# Remove old ZIPs if exist
+Remove-Item $installerZip -Force -ErrorAction SilentlyContinue
+Remove-Item $portableZip -Force -ErrorAction SilentlyContinue
+
+# Create Installer ZIP
 $setupExe = Get-ChildItem ".\Releases\*Setup*.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
 if ($setupExe) {
-    Write-Host "   $($setupExe.FullName)" -ForegroundColor White
-    Write-Host ""
-    Write-Host "To distribute:" -ForegroundColor Yellow
-    Write-Host "   1. Copy installer to flashdisk or upload to server" -ForegroundColor White
-    Write-Host "   2. User runs Setup.exe to install" -ForegroundColor White
-    Write-Host "   3. Application will auto-update from GitHub Releases" -ForegroundColor White
-} else {
-    Write-Host "   .\Releases\" -ForegroundColor White
+    Compress-Archive -Path $setupExe.FullName -DestinationPath $installerZip -Force
+    $installerSize = [math]::Round((Get-Item $installerZip).Length / 1MB, 2)
+    Write-Host "      Installer ZIP: $installerSize MB" -ForegroundColor Green
 }
 
+# Create Portable ZIP
+Compress-Archive -Path ".\publish\*" -DestinationPath $portableZip -Force
+$portableSize = [math]::Round((Get-Item $portableZip).Length / 1MB, 2)
+Write-Host "      Portable ZIP: $portableSize MB" -ForegroundColor Green
+
+Write-Host ""
+Write-Host "Distribution packages created:" -ForegroundColor Cyan
+Write-Host "   Installer: $installerZip" -ForegroundColor White
+Write-Host "   Portable:  $portableZip" -ForegroundColor White
+Write-Host ""
+Write-Host "Next steps:" -ForegroundColor Yellow
+Write-Host "   1. Test the installer" -ForegroundColor White
+Write-Host "   2. Copy ZIP files to flashdisk" -ForegroundColor White
+Write-Host "   3. Publish to GitHub Releases for auto-update" -ForegroundColor White
 Write-Host ""
