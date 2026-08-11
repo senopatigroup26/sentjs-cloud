@@ -1,4 +1,4 @@
-# Build and Package Sentja Cloud Client
+# Build and Package Sentja Cloud Client with Clowd.Squirrel
 # Usage: .\build-installer.ps1 -Version "1.0.0"
 
 param(
@@ -8,104 +8,165 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "Building Sentja Cloud Client v$Version..." -ForegroundColor Cyan
+Write-Host "============================================" -ForegroundColor Cyan
+Write-Host "Sentja Cloud Installer Builder v$Version" -ForegroundColor Cyan
+Write-Host "============================================" -ForegroundColor Cyan
+Write-Host ""
 
 # Clean previous builds
-Write-Host "Cleaning previous builds..." -ForegroundColor Yellow
+Write-Host "[1/6] Cleaning previous builds..." -ForegroundColor Yellow
 if (Test-Path ".\Releases") {
     Remove-Item ".\Releases" -Recurse -Force
+    Write-Host "      Removed old Releases folder" -ForegroundColor Gray
 }
 if (Test-Path ".\publish") {
     Remove-Item ".\publish" -Recurse -Force
+    Write-Host "      Removed old publish folder" -ForegroundColor Gray
 }
 
 # Build the application
-Write-Host "Building application..." -ForegroundColor Yellow
+Write-Host ""
+Write-Host "[2/6] Building Release version..." -ForegroundColor Yellow
 dotnet publish SentjaTray\SentjaTray.csproj `
     -c Release `
     -r win-x64 `
-    --self-contained true `
+    --self-contained false `
     -p:PublishSingleFile=false `
     -p:Version=$Version `
+    -p:IncludeNativeLibrariesForSelfExtract=false `
     -o .\publish
 
 if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
     Write-Host "Build failed!" -ForegroundColor Red
     exit 1
 }
 
-# Create NuSpec file for Squirrel
-Write-Host "Creating NuSpec file..." -ForegroundColor Yellow
-$nuspecContent = @"
-<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-  <metadata>
-    <id>SentjaCloud</id>
-    <version>$Version</version>
-    <title>Sentja Cloud</title>
-    <authors>Sentja Group</authors>
-    <owners>Sentja Group</owners>
-    <description>Sentja Cloud Desktop Client - Sync your files seamlessly</description>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <projectUrl>https://github.com/senopatigroup26/sentjs-cloud</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/senopatigroup26/sentjs-cloud/main/cloud-client/SentjaTray/Resources/logo.ico</iconUrl>
-    <copyright>Copyright 2026 Sentja Group</copyright>
-  </metadata>
-  <files>
-    <file src="publish\**" target="lib\net45" />
-  </files>
-</package>
-"@
+Write-Host "      Build completed successfully" -ForegroundColor Green
 
-$nuspecContent | Out-File -FilePath ".\SentjaCloud.nuspec" -Encoding UTF8
+# Create Releases directory
+Write-Host ""
+Write-Host "[3/6] Creating Releases directory..." -ForegroundColor Yellow
+New-Item -ItemType Directory -Path ".\Releases" -Force | Out-Null
+Write-Host "      Directory created" -ForegroundColor Green
 
-# Install Squirrel tools if not present
-$squirrelPath = "$env:USERPROFILE\.nuget\packages\squirrel.windows\2.0.1\tools"
-if (!(Test-Path "$squirrelPath\Squirrel.exe")) {
-    Write-Host "Installing Squirrel tools..." -ForegroundColor Yellow
-    dotnet tool install --global Squirrel.Windows --version 2.0.1
+# Check for Squirrel
+Write-Host ""
+Write-Host "[4/6] Checking for Squirrel..." -ForegroundColor Yellow
+
+$squirrelExe = $null
+
+# Check in NuGet packages
+$possiblePaths = @(
+    "$env:USERPROFILE\.nuget\packages\clowd.squirrel\2.11.1\tools\Squirrel.exe",
+    "$env:USERPROFILE\.nuget\packages\clowd.squirrel\2.11.0\tools\Squirrel.exe",
+    ".\packages\Clowd.Squirrel.2.11.1\tools\Squirrel.exe"
+)
+
+foreach ($path in $possiblePaths) {
+    if (Test-Path $path) {
+        $squirrelExe = $path
+        Write-Host "      Found Squirrel at: $path" -ForegroundColor Green
+        break
+    }
 }
 
-# Create NuGet package
-Write-Host "Creating NuGet package..." -ForegroundColor Yellow
-nuget pack SentjaCloud.nuspec -OutputDirectory .
-
-# Create Squirrel release
-Write-Host "Creating Squirrel release..." -ForegroundColor Yellow
-$nugetPackage = "SentjaCloud.$Version.nupkg"
-
-if (!(Test-Path $nugetPackage)) {
-    Write-Host "NuGet package not found: $nugetPackage" -ForegroundColor Red
-    exit 1
+if (-not $squirrelExe) {
+    Write-Host "      Squirrel not found. Downloading..." -ForegroundColor Yellow
+    
+    # Download Clowd.Squirrel NuGet package
+    $nugetUrl = "https://www.nuget.org/api/v2/package/Clowd.Squirrel/2.11.1"
+    $nugetZip = ".\clowd.squirrel.2.11.1.nupkg.zip"
+    $extractPath = ".\tools\Clowd.Squirrel"
+    
+    Invoke-WebRequest -Uri $nugetUrl -OutFile $nugetZip
+    Expand-Archive -Path $nugetZip -DestinationPath $extractPath -Force
+    Remove-Item $nugetZip
+    
+    $squirrelExe = "$extractPath\tools\Squirrel.exe"
+    
+    if (Test-Path $squirrelExe) {
+        Write-Host "      Squirrel downloaded successfully" -ForegroundColor Green
+    } else {
+        Write-Host ""
+        Write-Host "Failed to download Squirrel!" -ForegroundColor Red
+        Write-Host "Please install manually or use portable version" -ForegroundColor Yellow
+        exit 1
+    }
 }
 
-# Use Squirrel to create installer
-& "$squirrelPath\Squirrel.exe" `
-    --releasify $nugetPackage `
-    --releaseDir .\Releases `
-    --setupIcon .\SentjaTray\Resources\logo.ico `
-    --icon .\SentjaTray\Resources\logo.ico `
-    --no-msi
+# Pack with Squirrel
+Write-Host ""
+Write-Host "[5/6] Creating installer with Clowd.Squirrel..." -ForegroundColor Yellow
+
+$iconPath = (Resolve-Path ".\SentjaTray\Resources\logo.ico").Path
+if (-not (Test-Path $iconPath)) {
+    Write-Host "      Warning: Icon not found" -ForegroundColor Yellow
+    $iconPath = $null
+}
+
+# Build squirrel command
+$squirrelArgs = @(
+    "pack"
+    "--packId=SentjaCloud"
+    "--packVersion=$Version"
+    "--packDirectory=.\publish"
+    "--releaseDir=.\Releases"
+    "--packTitle=Sentja Cloud"
+    "--packAuthors=Sentja Group"
+    "--allowUnaware"
+)
+
+if ($iconPath) {
+    $squirrelArgs += "--icon=$iconPath"
+}
+
+Write-Host "      Running Squirrel..." -ForegroundColor Gray
+& $squirrelExe @squirrelArgs
 
 if ($LASTEXITCODE -ne 0) {
+    Write-Host ""
     Write-Host "Squirrel packaging failed!" -ForegroundColor Red
-    exit 1
+    Write-Host "Using portable version instead..." -ForegroundColor Yellow
+    
+    # Create portable ZIP as fallback
+    $zipPath = ".\Releases\SentjaCloud-$Version-Portable.zip"
+    Compress-Archive -Path ".\publish\*" -DestinationPath $zipPath -Force
+    
+    Write-Host ""
+    Write-Host "Portable version created: $zipPath" -ForegroundColor Green
+    exit 0
 }
 
-# Cleanup
-Write-Host "Cleaning up..." -ForegroundColor Yellow
-Remove-Item $nugetPackage -Force
-Remove-Item ".\SentjaCloud.nuspec" -Force
+Write-Host "      Installer created successfully" -ForegroundColor Green
+
+# Verify outputs
+Write-Host ""
+Write-Host "[6/6] Verifying outputs..." -ForegroundColor Yellow
+
+$allFiles = Get-ChildItem ".\Releases" -File
+foreach ($file in $allFiles) {
+    $size = [math]::Round($file.Length / 1MB, 2)
+    Write-Host "      $($file.Name): $size MB" -ForegroundColor Green
+}
 
 Write-Host ""
 Write-Host "============================================" -ForegroundColor Green
-Write-Host "Build completed successfully!" -ForegroundColor Green
+Write-Host "Build Completed Successfully!" -ForegroundColor Green
 Write-Host "============================================" -ForegroundColor Green
 Write-Host ""
-Write-Host "Installer location: .\Releases\Setup.exe" -ForegroundColor Cyan
-Write-Host "Updates location: .\Releases\" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "To publish updates:" -ForegroundColor Yellow
-Write-Host "1. Upload all files in .\Releases\ to GitHub Releases" -ForegroundColor Yellow
-Write-Host "2. Tag the release with v$Version" -ForegroundColor Yellow
+Write-Host "Installer files:" -ForegroundColor Cyan
+
+$setupExe = Get-ChildItem ".\Releases\*Setup*.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
+if ($setupExe) {
+    Write-Host "   $($setupExe.FullName)" -ForegroundColor White
+    Write-Host ""
+    Write-Host "To distribute:" -ForegroundColor Yellow
+    Write-Host "   1. Copy installer to flashdisk or upload to server" -ForegroundColor White
+    Write-Host "   2. User runs Setup.exe to install" -ForegroundColor White
+    Write-Host "   3. Application will auto-update from GitHub Releases" -ForegroundColor White
+} else {
+    Write-Host "   .\Releases\" -ForegroundColor White
+}
+
 Write-Host ""
