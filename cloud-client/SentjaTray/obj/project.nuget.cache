@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "CDTRTtede2U=",
+  "dgSpecHash": "cumyZ4uB1OY=",
   "success": true,
   "projectFilePath": "D:\\website\\sentjs-cloud\\cloud-client\\SentjaTray\\SentjaTray.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dunia\\.nuget\\packages\\bouncycastle.cryptography\\2.4.0\\bouncycastle.cryptography.2.4.0.nupkg.sha512",
+    "C:\\Users\\dunia\\.nuget\\packages\\clowd.squirrel\\2.11.1\\clowd.squirrel.2.11.1.nupkg.sha512",
     "C:\\Users\\dunia\\.nuget\\packages\\microsoft.data.sqlite\\10.0.0\\microsoft.data.sqlite.10.0.0.nupkg.sha512",
     "C:\\Users\\dunia\\.nuget\\packages\\microsoft.data.sqlite.core\\10.0.0\\microsoft.data.sqlite.core.10.0.0.nupkg.sha512",
     "C:\\Users\\dunia\\.nuget\\packages\\microsoft.extensions.configuration\\10.0.10\\microsoft.extensions.configuration.10.0.10.nupkg.sha512",

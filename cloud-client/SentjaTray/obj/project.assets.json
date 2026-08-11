@@ -15,6 +15,22 @@
           }
         }
       },
+      "Clowd.Squirrel/2.11.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/SquirrelLib.dll": {
+            "related": ".deps.json;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/SquirrelLib.dll": {
+            "related": ".deps.json;.xml"
+          }
+        },
+        "build": {
+          "build/Clowd.Squirrel.props": {}
+        }
+      },
       "Microsoft.Data.Sqlite/10.0.0": {
         "type": "package",
         "dependencies": {
@@ -892,6 +908,59 @@
         "lib/netstandard2.0/BouncyCastle.Cryptography.dll",
         "lib/netstandard2.0/BouncyCastle.Cryptography.xml",
         "packageIcon.png"
+      ]
+    },
+    "Clowd.Squirrel/2.11.1": {
+      "sha512": "tregtapTyVXjwhgyc4llUNh8HX3008yrglakUWQocgtGf2bOBHcibgixakkb2yB1FrM/gPDpxykg4sWtFzjpVg==",
+      "type": "package",
+      "path": "clowd.squirrel/2.11.1",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/Clowd.Squirrel.props",
+        "clowd.squirrel.2.11.1.nupkg.sha512",
+        "clowd.squirrel.nuspec",
+        "images/Squirrel-Clowd-Logo.png",
+        "lib/net46/SquirrelLib.dll",
+        "lib/net46/SquirrelLib.xml",
+        "lib/net461/SquirrelLib.dll",
+        "lib/net461/SquirrelLib.xml",
+        "lib/net462/SquirrelLib.dll",
+        "lib/net462/SquirrelLib.xml",
+        "lib/net48/SquirrelLib.dll",
+        "lib/net48/SquirrelLib.xml",
+        "lib/net5.0/SquirrelLib.deps.json",
+        "lib/net5.0/SquirrelLib.dll",
+        "lib/net5.0/SquirrelLib.xml",
+        "lib/net6.0/SquirrelLib.deps.json",
+        "lib/net6.0/SquirrelLib.dll",
+        "lib/net6.0/SquirrelLib.xml",
+        "lib/netstandard2.0/SquirrelLib.deps.json",
+        "lib/netstandard2.0/SquirrelLib.dll",
+        "lib/netstandard2.0/SquirrelLib.xml",
+        "tools/7z.dll",
+        "tools/7z.exe",
+        "tools/Microsoft.Deployment.Resources.dll",
+        "tools/Microsoft.Deployment.WindowsInstaller.dll",
+        "tools/Setup.exe",
+        "tools/Squirrel.exe",
+        "tools/StubExecutable.exe",
+        "tools/Update.exe",
+        "tools/WixNetFxExtension.dll",
+        "tools/candle.exe",
+        "tools/candle.exe.config",
+        "tools/darice.cub",
+        "tools/light.exe",
+        "tools/light.exe.config",
+        "tools/nuget.exe",
+        "tools/rcedit.exe",
+        "tools/signtool.exe",
+        "tools/singlefilehost.exe",
+        "tools/template.wxs",
+        "tools/wconsole.dll",
+        "tools/winterop.dll",
+        "tools/wix.dll"
       ]
     },
     "Microsoft.Data.Sqlite/10.0.0": {
@@ -2020,6 +2089,7 @@
   },
   "projectFileDependencyGroups": {
     "net10.0-windows": [
+      "Clowd.Squirrel >= 2.11.1",
       "Microsoft.Extensions.Hosting.WindowsServices >= 10.0.10",
       "SentjaMigration >= 1.0.0",
       "SentjaShared >= 1.0.0"
@@ -2077,6 +2147,10 @@
         "framework": "net10.0-windows7.0",
         "targetAlias": "net10.0-windows",
         "dependencies": {
+          "Clowd.Squirrel": {
+            "target": "Package",
+            "version": "[2.11.1, )"
+          },
           "Microsoft.Extensions.Hosting.WindowsServices": {
             "target": "Package",
             "version": "[10.0.10, )"

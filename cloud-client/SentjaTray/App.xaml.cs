@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using SentjaShared.ApiClient;
 using SentjaShared.Config;
 using SentjaShared.Storage;
+using SentjaTray.Services;
 
 // Disambiguate
 using WpfMessageBox = System.Windows.MessageBox;
@@ -17,6 +18,7 @@ public partial class App : System.Windows.Application
     private SentjaApiClient? _apiClient;
     private System.Windows.Threading.DispatcherTimer? _statusTimer;
     private SentjaMigration.SyncManager? _syncManager;
+    private UpdateService? _updateService;
 
     public App()
     {
@@ -50,8 +52,14 @@ public partial class App : System.Windows.Application
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             _apiClient = new SentjaApiClient();
+            
+            // Initialize update service (GitHub Releases)
+            _updateService = new UpdateService("https://github.com/senopatigroup26/sentjs-cloud");
 
             InitializeTrayIcon();
+
+            // Check for updates on startup (silent)
+            _ = CheckForUpdatesAsync(silent: true);
 
             // Auto-register device based on hardware
             _ = AutoRegisterDeviceAsync();
@@ -110,6 +118,11 @@ public partial class App : System.Windows.Application
         
         var syncNowItem = new ToolStripMenuItem("Sync Now", null, OnSyncNow);
         menu.Items.Add(syncNowItem);
+
+        menu.Items.Add(new ToolStripSeparator());
+        
+        var checkUpdateItem = new ToolStripMenuItem("Check for Updates", null, OnCheckForUpdates);
+        menu.Items.Add(checkUpdateItem);
 
         menu.Items.Add(new ToolStripSeparator());
 
@@ -400,6 +413,32 @@ public partial class App : System.Windows.Application
     {
         var win = new SettingsWindow();
         win.Show();
+    }
+
+    private async Task CheckForUpdatesAsync(bool silent = true)
+    {
+        if (_updateService == null) return;
+        
+        try
+        {
+            await _updateService.CheckForUpdatesAsync(silent);
+        }
+        catch (Exception ex)
+        {
+            if (!silent)
+            {
+                WpfMessageBox.Show(
+                    $"Failed to check for updates:\n{ex.Message}",
+                    "Sentja Cloud - Update Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+    }
+
+    private void OnCheckForUpdates(object? sender, EventArgs e)
+    {
+        _ = CheckForUpdatesAsync(silent: false);
     }
 
     private void OnExit(object? sender, EventArgs e)

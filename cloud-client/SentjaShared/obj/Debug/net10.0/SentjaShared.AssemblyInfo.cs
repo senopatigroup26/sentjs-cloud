@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SentjaShared")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f173cb8a41ceee233317ad30a9f17a45447ad78")]
 [assembly: System.Reflection.AssemblyProductAttribute("SentjaShared")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SentjaShared")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

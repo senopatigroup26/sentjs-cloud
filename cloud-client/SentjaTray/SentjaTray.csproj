@@ -8,9 +8,17 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Company>Sentja Group</Company>
+    <Product>Sentja Cloud</Product>
+    <Description>Sentja Cloud Desktop Client</Description>
+    <Copyright>Copyright © 2026 Sentja Group</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Clowd.Squirrel" Version="2.11.1" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.10" />
   </ItemGroup>
 
