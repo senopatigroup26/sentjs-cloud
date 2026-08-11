@@ -4,3 +4,18 @@ dist/
 *.log
 logs/
 .DS_Store
+
+.vercel
+.env*
+
+# .NET Build outputs
+**/bin/
+**/obj/
+**/*.user
+**/*.suo
+**/.vs/
+**/packages/
+**/*.nupkg
+**/.vscode/
+**/Releases/
+**/publish/
