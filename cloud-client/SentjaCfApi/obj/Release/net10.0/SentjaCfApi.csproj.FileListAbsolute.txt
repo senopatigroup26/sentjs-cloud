@@ -1,0 +1,15 @@
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\bin\Release\net10.0\SentjaCfApi.deps.json
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\bin\Release\net10.0\SentjaCfApi.dll
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\bin\Release\net10.0\SentjaCfApi.pdb
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\bin\Release\net10.0\SentjaShared.dll
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\bin\Release\net10.0\SentjaShared.pdb
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\obj\Release\net10.0\SentjaCfApi.csproj.AssemblyReference.cache
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\obj\Release\net10.0\SentjaCfApi.GeneratedMSBuildEditorConfig.editorconfig
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\obj\Release\net10.0\SentjaCfApi.AssemblyInfoInputs.cache
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\obj\Release\net10.0\SentjaCfApi.AssemblyInfo.cs
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\obj\Release\net10.0\SentjaCfApi.csproj.CoreCompileInputs.cache
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\obj\Release\net10.0\SentjaCf.5967BCE5.Up2Date
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\obj\Release\net10.0\SentjaCfApi.dll
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\obj\Release\net10.0\refint\SentjaCfApi.dll
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\obj\Release\net10.0\SentjaCfApi.pdb
+D:\website\sentjs-cloud\cloud-client\SentjaCfApi\obj\Release\net10.0\ref\SentjaCfApi.dll

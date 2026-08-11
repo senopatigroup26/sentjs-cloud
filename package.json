@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.112.3",
+    "lucide-react": "^1.31.0"
+  },
+  "devDependencies": {
+    "next": "^16.3.0"
+  }
+}

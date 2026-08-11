@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="SentjaCfApi/SentjaCfApi.csproj" />
+  <Project Path="SentjaCloudService/SentjaCloudService.csproj" />
+  <Project Path="SentjaMigration/SentjaMigration.csproj" />
+  <Project Path="SentjaShared/SentjaShared.csproj" />
+  <Project Path="SentjaTray/SentjaTray.csproj" />
+</Solution>
