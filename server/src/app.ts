@@ -17,6 +17,9 @@ import systemRoutes     from './routes/system.routes';
 
 const app = express();
 
+// ── Trust proxy (required for Vercel/reverse proxy) ──────────────────────────
+app.set('trust proxy', 1);
+
 // ── Security ─────────────────────────────────────────────────────────────────
 app.use(helmet());
 app.use(cors({

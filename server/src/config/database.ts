@@ -4,10 +4,11 @@ import { logger } from '../utils/logger';
 
 export const pool = new Pool({
   connectionString: config.db.url,
-  min: 2,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  ssl: { rejectUnauthorized: false },
+  min: 0,       // serverless: jangan buat koneksi saat startup
+  max: 5,       // batasi koneksi untuk serverless
+  idleTimeoutMillis: 10000,
+  connectionTimeoutMillis: 10000,
 });
 
 pool.on('error', (err) => {
