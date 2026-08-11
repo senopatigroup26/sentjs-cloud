@@ -31,7 +31,7 @@ Ada 2 cara build installer untuk Sentja Cloud:
 1. User double-click Setup.exe
 2. Welcome screen
 3. License agreement
-4. **Device Registration** - input email/password
+4. **Device Registration** - input device name (default: computer name)
 5. Choose install location
 6. Select options (desktop shortcut, auto-start)
 7. Install files dengan progress bar
@@ -116,9 +116,10 @@ Why?
 ### Using Inno Setup Installer:
 1. Double-click `SentjaCloudSetup-1.0.0.exe`
 2. Follow setup wizard
-3. Enter Sentja Cloud credentials when prompted
-4. Choose installation options
-5. Click Finish to launch app
+3. Enter device name when prompted (default: your computer name)
+4. Device will be registered automatically
+5. Choose installation options
+6. Click Finish to launch app
 
 ### Using Squirrel Installer:
 1. Extract `SentjaCloud-v1.0.0-Installer.zip`
@@ -145,7 +146,9 @@ Install to: `C:\Program Files (x86)\Inno Setup 6\`
 Check:
 1. Internet connection
 2. Backend API is running: https://api-cloud.sentjagroup.tech
-3. Credentials are correct
+3. Device name is valid (no special characters)
+
+Note: If registration fails, you can skip and register manually after installation.
 
 ### Shortcuts not removed after uninstall (Squirrel)
 This is a known issue with Squirrel installer.

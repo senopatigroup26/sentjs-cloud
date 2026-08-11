@@ -108,7 +108,7 @@ Write-Host "   $($setupFile.FullName)" -ForegroundColor White
 Write-Host ""
 Write-Host "Features:" -ForegroundColor Cyan
 Write-Host "   - Setup wizard with UI" -ForegroundColor Green
-Write-Host "   - Device registration during install" -ForegroundColor Green
+Write-Host "   - Device registration (device name only)" -ForegroundColor Green
 Write-Host "   - Desktop shortcut option" -ForegroundColor Green
 Write-Host "   - Auto-start option" -ForegroundColor Green
 Write-Host "   - Clean uninstall (removes shortcuts)" -ForegroundColor Green
