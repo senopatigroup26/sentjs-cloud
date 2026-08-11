@@ -4,7 +4,7 @@ namespace SentjaShared.Config;
 
 public class AppConfig
 {
-    public string ApiBaseUrl { get; set; } = "http://localhost:3000/api";
+    public string ApiBaseUrl { get; set; } = "https://api-cloud.sentjagroup.tech/api";
     public string SyncRootPath { get; set; } = @"C:\SentjaCloud";
     public string LocalCachePath { get; set; } = @"C:\ProgramData\Sentja\Cache";
     public string LocalDbPath { get; set; } = @"C:\ProgramData\Sentja\sentja.db";
