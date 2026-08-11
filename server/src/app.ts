@@ -65,9 +65,11 @@ app.use('/api/system',      systemRoutes);
 // ── Error handler ─────────────────────────────────────────────────────────────
 app.use(errorMiddleware);
 
-// ── Start ─────────────────────────────────────────────────────────────────────
-app.listen(config.port, () => {
-  logger.info(`Sentja Cloud API running on port ${config.port} [${config.env}]`);
-});
+// ── Start (only when not running on Vercel) ───────────────────────────────────
+if (process.env.VERCEL !== '1') {
+  app.listen(config.port, () => {
+    logger.info(`Sentja Cloud API running on port ${config.port} [${config.env}]`);
+  });
+}
 
 export default app;
