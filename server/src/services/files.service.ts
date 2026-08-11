@@ -146,4 +146,28 @@ export async function markDehydrated(fileId: string, deviceId: string, ip?: stri
   return { file_id: fileId, status: 'dehydrated', dehydrated_at: file.dehydrated_at };
 }
 
+export async function markDeleted(deviceId: string, filePath: string, ip?: string) {
+  const result = await query<FileRow>(
+    `UPDATE files
+     SET status = 'deleted', updated_at = NOW()
+     WHERE device_id = $1 AND (local_path = $2 OR file_name = $2)
+     RETURNING *`,
+    [deviceId, filePath]
+  );
+
+  if (result.rows.length === 0) {
+    throw new AppError('FILE_NOT_FOUND', 'File tidak ditemukan.', 404);
+  }
+
+  const file = result.rows[0];
+  await writeAuditLog({
+    device_id: deviceId,
+    action: 'FILE_DELETED_LOCAL',
+    detail_json: { file_id: file.id, file_name: file.file_name, file_path: filePath },
+    ip_address: ip,
+  });
+
+  return { file_id: file.id, status: 'deleted' };
+}
+
 
